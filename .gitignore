@@ -1,0 +1,11 @@
+#terraform generated files 
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.zip
+
+#aws cli installation
+infrastructure/aws/
+
+#generated processed data
+data/processed/
