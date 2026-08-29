@@ -133,10 +133,19 @@ we are pushing the data through DVC
   dvc remote list
   dvc status
   dvc add models/model.pkl
-------
+----------------
 git status 
+dvc add models/model.pkl
 git  add models/model.pkl
+las -la models
 Git status
+DVC push
+git status 
+git add .
+git coomit -m "second commit"
+git push origin miam
+-----------------------
+
 mlflow.db --> mlruns we should not put in git  and  as well 
 model.pkl --> dvc  --model.pkl.dvc --github
     model.pkl --> s3/dvc remote
