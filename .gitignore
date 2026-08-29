@@ -9,3 +9,7 @@ infrastructure/aws/
 
 #generated processed data
 data/processed/
+
+#mlflow local tracking file 
+mlflow.db
+mlruns/
