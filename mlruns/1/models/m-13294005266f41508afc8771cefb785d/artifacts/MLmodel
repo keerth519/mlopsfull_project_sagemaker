@@ -1,0 +1,23 @@
+artifact_path: /workspaces/mlopsfull_project_sagemaker/mlruns/1/models/m-13294005266f41508afc8771cefb785d/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.12.1
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.0
+    skops_trusted_types: null
+mlflow_version: 3.15.2
+model_id: m-13294005266f41508afc8771cefb785d
+model_size_bytes: 2523198
+model_uuid: m-13294005266f41508afc8771cefb785d
+prompts: null
+run_id: 0514b256a31444d58ee52ede90aa96ae
+utc_time_created: '2026-08-29 14:53:48.897283'

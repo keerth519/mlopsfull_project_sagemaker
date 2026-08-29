@@ -1,4 +1,4 @@
-"""data inspection and validation"""
+"""data inspection"""
 #importing the pandas library
 import pandas as pd 
 #reading the raw csv file and  stroing it in  Datafram as df
@@ -9,6 +9,8 @@ print(df.shape)
 print(df.columns.tolist())
 #it will check the any missing values in every column 
 print(df.isnull().sum())
+
+'''data validation'''
 #checking the number of  C and R in dataset 
 print("Rows:", df.shape[0])
 print("columns:", df.shape[1])
