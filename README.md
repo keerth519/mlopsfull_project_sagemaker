@@ -7,6 +7,17 @@ first part
   github
     ||
 Data collection --> validation -->preprocessing --> feature engineering --> Train/test split --> Dvc--s3
+--------------
+Terraform installation : wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install terraform
+---------------
+AWS CLI installation : 
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+---------------
+
 ==============================================================
 second part 
    model training --> we are here
@@ -150,9 +161,17 @@ mlflow.db --> mlruns we should not put in git  and  as well
 model.pkl --> dvc  --model.pkl.dvc --github
     model.pkl --> s3/dvc remote
 -------
-
+without dvc directly pushing to s3
 ---> aws s3 cp models/model.pkl s3://mlops-full-project-sagemaker-data-2026/model.pkl   ---> it will upload the file to s3 bucket 
 ===============
+sagemaker model registry 
+===================
+s3 model.pkl --> sagemaker model --> model package -> modle Package group --> version 1
+s3 --> model.tar.gz / model artifacts
+ecr --> inference container 
+            || --> sagemaker model registry --> model Vesrion 
+NOTE: creating the model package group = creating the container/group in registry then actual mode registration step
+
 
 
 
