@@ -64,6 +64,22 @@ pipeline {
                 '''
             }
         }
+        stage('Register Model') {
+            steps {
+                echo "Registering model in sagemaker model registry..."
+                sh '''
+                    echo " packaging trained model .."
+                    tar -czvf models/model.tar.gz -C models model.pkl
+                    echo "uploading model to s3 ...."
+                    aws s3 cp models/model.tar.gz s3://mlops-full-project-sagemaker-data-2026/model.tar.gz
+
+                    echo " registering model in sagemaker modle registry .."
+                    cd infrastructure
+                    terraform init 
+                    terraform apply -auto-approve
+                '''
+            }
+        }
     }
 
 }
