@@ -169,9 +169,51 @@ sagemaker model registry
 s3 model.pkl --> sagemaker model --> model package -> modle Package group --> version 1
 s3 --> model.tar.gz / model artifacts
 ecr --> inference container 
-            || --> sagemaker model registry --> model Vesrion 
+            || --> sagemaker model registry --> model Vesrion
+---------------
+Sage maker model package group : 
 NOTE: creating the model package group = creating the container/group in registry then actual mode registration step
+after creating the infra about the package group then need to register the model vesrion 
+------------------------
+s3 --> model.tar.gz / model artifacts
+----------
+-- tar -czvf models/model.tar.gz -C models model.pkl  --  converting  .pkl to model.tar.gc (sagemaker - friendly packaged model artifact)
+----------
+---ls -lh models/
+--- aws s3  ls s3://mlops-full-project-sagemaker-data-2026/ (view the list )
+---aws s3 cp models/model.tar.gz s3://mlops-full-project-sagemaker-data-2026/model.tar.gz  (for to upload the tar file in s3 )
+----------------
+sagemkaer model Registry 
+      will create the modelversion in model registry 
+    sagemaker model registry registration required iamrole+image URL
 
+--- infra code in terraform/main.tf ( for sagenaker package group and model registry(inference container))  
 
+-- pip install sagemaker (src/importsagemaker.py)
+## run this code as project root
+    python -c "import sklearn, joblib; print('sklearn:', sklearn.__version__); print('joblib', jobli
+b.__vesrion__)"   ## it will which sagemaker image tag to put in main.tf 
+###  
+  pip show joblib | grep Version   --(To show the version of joblib)
 
+  now we got the vesion of sagemaker and joblib to update in main.tf 
+
+#### Important :  sagemaker container version mainly depends on scikit-learn compatability and we can't decide the sagemaker maker by using joblib version 
+
+pip install scikit-learn==1.4.2  
+###  sagemaker support the scikit-learn framework  version 1.4.2 , aws lists it as the current supported version.  out trained modek has was created with scikitlearn 1.9.0, we shodn't to register this 1.90 model inside a 1.4.2 container , that can be model-loading/version - compatability problems 
+### aws says the 1.4.2 container requires python 3.1o+joblin >-1.5.2  , now our joblib already satisfies that requiremnent 
+      ------  current --> sklearn 1.9.0 -- change to sklearn 1.4.2 ---> train again --> model.pkl ---> model.tar.gz --> s3 --> sagemaker model Registry 
+retraining the model 
+           again we need to run the data_training.py -->  remove existing Tar.gz file --> create and convert already trained .mkl file to tar.gz ---> push to s3 --> execute the Evaluation.py file --> o/p -- evalauation ,etrics logged to mlflow
+
+check the packages before register the model 
+### aws sagemaker list-model-packages --model-package-group-name mlops-full-proejct-models --region ap-southeast-2
+To check the Repositories 
+### aws ecr describe-repositories --region ap-southeast-2
+if not container image has been dispayed import the eaxt IMAGE URI from that specifi region
+### pythin -c import sys; print (sys.version)
+To check the Sagemaker version 
+###  python -c "import importlib.metadata; print(importlib.metadata.version('sagemaker'))"
+sagamker version --> 3.21.0  and scikit-learn - 19.0 and joblib - 1.5.3 sagemaker sklearn container 1.4-2
 

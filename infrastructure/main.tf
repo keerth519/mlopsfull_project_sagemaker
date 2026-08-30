@@ -30,3 +30,20 @@ resource "aws_sagemaker_model_package_group" "mlops_model_group" {
     managed = "Terraform"
   }
 }
+# Regestring the model version in Sagemaker Ai
+resource "awscc_sagemaker_model_package" "mlops_model" {
+  model_package_group_name = aws_sagemaker_model_package_group.mlops_model_group.model_package_group_name
+  model_package_description = "Machine Failure Prediction Model Version 1"
+  inference_specification = {
+    containers = [
+      {
+      image = "783357654285.dkr.ecr.ap-southeast-2.amazonaws.com/sagemaker-scikit-learn:1.4-2-cpu-py3"
+      model_data_url = "s3://mlops-full-project-sagemaker-data-2026/model.tar.gz"
+    }
+  ]
+  
+    supported_content_types = ["text/csv"]
+    supported_response_mime_types = ["text/csv"]
+}
+}
+
