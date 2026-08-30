@@ -71,6 +71,7 @@ pipeline {
                     echo " packaging trained model .."
                     tar -czvf models/model.tar.gz -C models model.pkl
                 '''
+                script {
                 withCredentials([
                     usernamePassword(
 
@@ -95,7 +96,8 @@ pipeline {
                 }
               }
             }
-        }
-   }
+         }
+     }
+  }
 }
 
