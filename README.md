@@ -169,9 +169,111 @@ sagemaker model registry
 s3 model.pkl --> sagemaker model --> model package -> modle Package group --> version 1
 s3 --> model.tar.gz / model artifacts
 ecr --> inference container 
-            || --> sagemaker model registry --> model Vesrion 
+            || --> sagemaker model registry --> model Vesrion
+---------------
+Sage maker model package group : 
 NOTE: creating the model package group = creating the container/group in registry then actual mode registration step
+after creating the infra about the package group then need to register the model vesrion 
+------------------------
+s3 --> model.tar.gz / model artifacts
+----------
+-- tar -czvf models/model.tar.gz -C models model.pkl  --  converting  .pkl to model.tar.gc (sagemaker - friendly packaged model artifact)
+----------
+---ls -lh models/
+--- aws s3  ls s3://mlops-full-project-sagemaker-data-2026/ (view the list )
+---aws s3 cp models/model.tar.gz s3://mlops-full-project-sagemaker-data-2026/model.tar.gz  (for to upload the tar file in s3 )
+----------------
+sagemkaer model Registry 
+      will create the modelversion in model registry 
+    sagemaker model registry registration required iamrole+image URL
 
+--- infra code in terraform/main.tf ( for sagenaker package group and model registry(inference container))  
 
+-- pip install sagemaker (src/importsagemaker.py)
+## run this code as project root
+    python -c "import sklearn, joblib; print('sklearn:', sklearn.__version__); print('joblib', jobli
+b.__vesrion__)"   ## it will which sagemaker image tag to put in main.tf 
+###  
+  pip show joblib | grep Version   --(To show the version of joblib)
 
+  now we got the vesion of sagemaker and joblib to update in main.tf 
 
+#### Important :  sagemaker container version mainly depends on scikit-learn compatability and we can't decide the sagemaker maker by using joblib version 
+
+pip install scikit-learn==1.4.2  
+###  sagemaker support the scikit-learn framework  version 1.4.2 , aws lists it as the current supported version.  out trained modek has was created with scikitlearn 1.9.0, we shodn't to register this 1.90 model inside a 1.4.2 container , that can be model-loading/version - compatability problems 
+### aws says the 1.4.2 container requires python 3.1o+joblin >-1.5.2  , now our joblib already satisfies that requiremnent 
+      ------  current --> sklearn 1.9.0 -- change to sklearn 1.4.2 ---> train again --> model.pkl ---> model.tar.gz --> s3 --> sagemaker model Registry 
+retraining the model 
+           again we need to run the data_training.py -->  remove existing Tar.gz file --> create and convert already trained .mkl file to tar.gz ---> push to s3 --> execute the Evaluation.py file --> o/p -- evalauation ,etrics logged to mlflow
+
+check the packages before register the model 
+### aws sagemaker list-model-packages --model-package-group-name mlops-full-proejct-models --region ap-southeast-2
+To check the Repositories 
+### aws ecr describe-repositories --region ap-southeast-2
+if not container image has been dispayed import the eaxt IMAGE URI from that specifi region
+### pythin -c import sys; print (sys.version)
+To check the Sagemaker version 
+###  python -c "import importlib.metadata; print(importlib.metadata.version('sagemaker'))"
+sagamker version --> 3.21.0  and scikit-learn - 19.0 and joblib - 1.5.3 sagemaker sklearn container 1.4-2
+
+Model has been registered so we can retirve through command line as of now so visualise and from console or UI representation we need to setup the infra for sagemaker studio by creating domain and user by applying the iam policies and roles 
+
+ "ModelPackageGroupName": "mlops-full-project-models",
+            "ModelPackageGroupArn": "arn:aws:sagemaker:ap-southeast-2:129898827031:model-package-group/mlops-full-project-models",
+            "ModelPackageGroupDescription": "Model Registry for Machine Failure Prediction models",
+            "CreationTime": "2026-08-29T19:03:27.738000+00:00",
+            "ModelPackageGroupStatus": "Completed"
+
+=================================================================================================
+CI/CD pipeline :
+=================================================================================================
+it containes -- >github -->jenkins-->
+                              ||
+                               -----> 1. checkout the code 
+                               ------> 2. install dependencies
+                               -------> 3. runtests
+                               -------> 4. data validation /preprocessing 
+                               -----> 5. Train model
+                               -----> 6.evaluate model
+                              ------> 7.log experiment --> Mlflow
+                              ------->8. package the model
+                               ------>9.push artifacts--> s3
+                               -----> 10.register model --> sagemaker model registry
+                              -------> 11. Quality gate
+                                             ||
+                                              ----> FAIL --> STOP
+                                              ----> Pass --> continue
+                              ------->12. deploy --> sagemaker endpoint
+                              ------> 13. cloudwatch monitoring
+                               -----> SNS ---> email alerts
+-----------------------------------
+JENKINS -->  jenkins controller --> jenkins agents/workers --> ephemeral build agents 
+----------------------------------
+we use jenkins to orchestrate the ml pipeline .it check out the code from git , installs dependencies , runs tests and validation , triggers model training and evaluation , logs experiments to mlflow , stores the model artifacts in s3 , register the model in sagemaket model registry , applies a metric -based quality gate , and if the model passes , deploy it to a sagemaker endpoint . cloudwatch monitors the endpoint and SNS send alerts
+-------------------------------
+
+I am building the jenkins through Docker container without ec2 instances
+     --> docket -- version (to check the docker is present are not in current environment )
+     pulling the Jenkins image 
+      ---> docker pull jenkins/jenkins:lts-jdk21
+    Starts the jenkins container 
+      ---->    docker run -d \
+               --name jenkins \
+               -p 8080:8080 -p 50000:50000 \
+               -v jenkins_home:/var/jenkins_home \
+                jenkins/jenkins:lts-jdk21
+    check the container  --> docker ps 
+    check the password by using ---> docker logs jenkins
+--------------------------------------
+  NOTE : if  the port is not farwading to browser cntrl+shft+p --  type ports: forward port --> enter 
+  it will ask for port ot it will another tab beside of terminal
+  like 8080 click it will open the jenkins page 
+--------------------------------------
+   pip freeze  
+   it will give the  dependent libraries
+   pip freeze | grep -Ei "boto3|sagemaker|mlflow|scikit-learn|pandas|numpy|joblib|dvc|dvc-s3"
+-----------------
+   pipeline has been created for venv, checkout, install dependencies , validate , train , evalaute(Jenkinsfile)
+---------------
+       
