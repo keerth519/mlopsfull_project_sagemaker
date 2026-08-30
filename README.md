@@ -291,4 +291,4 @@ I am building the jenkins through Docker container without ec2 instances
    then setupthe webhook in github to trigger the pipeline automatically when code changes and push to main branch 
      -- added the trigger in job - configure 
      gihub --> setting --> actions --> webhooks --> create --> added the jenkins url as playload url  and content type as json and enable SSL 
---------------------
+----------------------
