@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PYTHON_ENV = "venv"
+        PYTHON_ENV = ".venv"
     }
 
     stages {
@@ -21,8 +21,7 @@ pipeline {
                 sh '''
                     python3 -m venv ${PYTHON_ENV}
                     . ${PYTHON_ENV}/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirement.txt
+                    python -m pip install --no-cache-dir -r requirements-ci.txt
                 '''
             }
         }
