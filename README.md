@@ -282,3 +282,6 @@ I am building the jenkins through Docker container without ec2 instances
 ------------------
      dependency conflicts has been occured while running requirement.txt file so fixed 
 -----------------
+   df -h
+   du -sh /var/jenkins_home/* 2>/dev/null | sort -h
+   du -sh /var/jenkins_home/workspace/* 2>/dev/null | sort -h
