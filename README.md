@@ -250,4 +250,28 @@ it containes -- >github -->jenkins-->
 -----------------------------------
 JENKINS -->  jenkins controller --> jenkins agents/workers --> ephemeral build agents 
 ----------------------------------
+we use jenkins to orchestrate the ml pipeline .it check out the code from git , installs dependencies , runs tests and validation , triggers model training and evaluation , logs experiments to mlflow , stores the model artifacts in s3 , register the model in sagemaket model registry , applies a metric -based quality gate , and if the model passes , deploy it to a sagemaker endpoint . cloudwatch monitors the endpoint and SNS send alerts
+-------------------------------
 
+I am building the jenkins through Docker container without ec2 instances
+     --> docket -- version (to check the docker is present are not in current environment )
+     pulling the Jenkins image 
+      ---> docker pull jenkins/jenkins:lts-jdk21
+    Starts the jenkins container 
+      ---->    docker run -d \
+               --name jenkins \
+               -p 8080:8080 -p 50000:50000 \
+               -v jenkins_home:/var/jenkins_home \
+                jenkins/jenkins:lts-jdk21
+    check the container  --> docker ps 
+    check the password by using ---> docker logs jenkins
+--------------------------------------
+  NOTE : if  the port is not farwading to browser cntrl+shft+p --  type ports: forward port --> enter 
+  it will ask for port ot it will another tab beside of terminal
+  like 8080 click it will open the jenkins page 
+--------------------------------------
+   pip freeze  
+   it will give the  dependent libraries
+   pip freeze | grep -Ei "boto3|sagemaker|mlflow|scikit-learn|pandas|numpy|joblib|dvc|dvc-s3"
+
+       
