@@ -18,6 +18,11 @@ region = "ap-southeast-2" # Sydney
 resource "aws_s3_bucket" "mlops_data" {
 bucket = "mlops-full-project-sagemaker-data-2026"
 }
+resource "aws_s3_object" "model" {
+  bucket = aws_s3_bucket.mlops_data.id
+  key = "model.tar.gz"
+  source = "../models/model.tar.gz"
+}
 #sagemaker model registry
 #this creates a model package Group where different versions of out trained ml model can be registered  and managed
 resource "aws_sagemaker_model_package_group" "mlops_model_group" {
@@ -34,6 +39,7 @@ resource "aws_sagemaker_model_package_group" "mlops_model_group" {
 resource "awscc_sagemaker_model_package" "mlops_model" {
   model_package_group_name = aws_sagemaker_model_package_group.mlops_model_group.model_package_group_name
   model_package_description = "Machine Failure Prediction Model Version 1"
+  depends_on = [aws_s3_object.model]
   inference_specification = {
     containers = [
       {

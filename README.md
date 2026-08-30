@@ -277,7 +277,7 @@ I am building the jenkins through Docker container without ec2 instances
    pipeline has been created for venv, checkout, install dependencies , validate , train , evalaute(Jenkinsfile)
 ---------------
       to go to the jenkins container as root in your terminal 
-        docket  exec -u 0 -it jenkins bash
+        docker  exec -u 0 -it jenkins bash
         python has been installed and moved to main branch
 ------------------
      dependency conflicts has been occured while running requirement.txt file so fixed 
