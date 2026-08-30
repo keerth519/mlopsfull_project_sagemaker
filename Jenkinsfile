@@ -80,21 +80,19 @@ pipeline {
                         passwordVariable: 'AWS_SECRET_ACCESS_KEY'
                     )
                 ]){
-                docker.image('amazon/aws-cli:latest').inside{
-                  sh '''
+                   sh '''
                     echo "uploading files to s3
                     aws s3 cp models/model.tar.gz s3://mlops-full-project-sagemaker-data-2026/model.tar.gz
-                '''
-                }
-                docker.image('hashicorp/terraform:latest').inside{
-                  sh '''
+                
+               
+                
                     echo " registering model in sagemaker modle registry .."
                     cd infrastructure
                     terraform init 
                     terraform apply -auto-approve
                 '''
-                }
-              }
+                }  
+              
             }
          }
      }
