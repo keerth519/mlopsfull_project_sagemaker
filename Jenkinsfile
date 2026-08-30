@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        PYTHON_ENV = "venv"
+    }
+
     stages {
 
         stage('Checkout') {
@@ -15,7 +19,8 @@ pipeline {
             steps {
                 echo "Installing dependencies..."
                 sh '''
-                   
+                    python3 -m venv ${PYTHON_ENV}
+                    . ${PYTHON_ENV}/bin/activate
                     pip install --upgrade pip
                     pip install -r requirement.txt
                 '''
@@ -26,6 +31,7 @@ pipeline {
             steps {
                 echo "Validating dataset and code..."
                 sh '''
+                    . ${PYTHON_ENV}/bin/activate
                     python src/data_validation.py
                 '''
             }
@@ -35,7 +41,7 @@ pipeline {
             steps {
                 echo "Training Model..."
                 sh '''
-                
+                    . ${PYTHON_ENV}/bin/activate
                     python src/data_training.py
                 '''
             }
@@ -45,7 +51,7 @@ pipeline {
             steps {
                 echo "Evaluating Model..."
                 sh '''
-                 
+                    . ${PYTHON_ENV}/bin/activate
                     python src/data_evaluation.py
                 '''
             }
