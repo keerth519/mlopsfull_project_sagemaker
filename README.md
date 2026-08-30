@@ -273,5 +273,7 @@ I am building the jenkins through Docker container without ec2 instances
    pip freeze  
    it will give the  dependent libraries
    pip freeze | grep -Ei "boto3|sagemaker|mlflow|scikit-learn|pandas|numpy|joblib|dvc|dvc-s3"
-
+-----------------
+   pipeline has been created for venv, checkout, install dependencies , validate , train , evalaute(Jenkinsfile)
+---------------
        

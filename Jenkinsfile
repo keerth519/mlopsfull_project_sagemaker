@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo "Checking out source code..."
                 git branch: 'main',
-                    url: 'https://github.com/your-org/mlops-project.git'
+                    url: 'https://github.com/keerth519/mlopsfull_project_sagemaker.git'
             }
         }
 
