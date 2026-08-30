@@ -22,7 +22,7 @@ pipeline {
                     python3 -m venv ${PYTHON_ENV}
                     . ${PYTHON_ENV}/bin/activate
                     pip install --upgrade pip
-                    pip install -r requirements.txt
+                    pip install -r requirement.txt
                 '''
             }
         }

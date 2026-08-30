@@ -276,4 +276,5 @@ I am building the jenkins through Docker container without ec2 instances
 -----------------
    pipeline has been created for venv, checkout, install dependencies , validate , train , evalaute(Jenkinsfile)
 ---------------
-       
+      to go to the jenkins container as root in your terminal 
+        docket  exec -u 0 -it jenkins bash
