@@ -292,3 +292,5 @@ I am building the jenkins through Docker container without ec2 instances
      -- added the trigger in job - configure 
      gihub --> setting --> actions --> webhooks --> create --> added the jenkins url as playload url  and content type as json and enable SSL 
 ------------------------
+URL for payload - https://verbose-giggle-x5wjwq6rg9p4fp4j-8080.app.github.dev/github-webhook/ -- jenkins url - https://verbose-giggle-x5wjwq6rg9p4fp4j-8080.app.github.dev/job/mlops-full-project/
+we are removing the from job to end and adding the github-webhook in that place 
