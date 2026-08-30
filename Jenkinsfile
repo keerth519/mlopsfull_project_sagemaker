@@ -39,6 +39,7 @@ pipeline {
             steps {
                 echo "preprocessing dataset and code..."
                 sh '''
+                    mkdir -p data/processed
                     . ${PYTHON_ENV}/bin/activate
                     python src/data_preprocessing.py
                 '''
