@@ -285,3 +285,10 @@ I am building the jenkins through Docker container without ec2 instances
    df -h
    du -sh /var/jenkins_home/* 2>/dev/null | sort -h
    du -sh /var/jenkins_home/workspace/* 2>/dev/null | sort -h
+   we seapeareted the requirement.txt and requirement-ci.txt for light weight image for libraries to avoid the space issue 
+   and we have missed to add the preprocessing stage in pipeline that is also added with mkdir 
+   and finnaly pipeline successfully executed 
+   then setupthe webhook in github to trigger the pipeline automatically when code changes and push to main branch 
+     -- added the trigger in job - configure 
+     gihub --> setting --> actions --> webhooks --> create --> added the jenkins url as playload url  and content type as json and enable SSL 
+--------------------
