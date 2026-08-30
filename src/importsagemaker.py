@@ -16,3 +16,5 @@ print (sys.version)
     from sagemaker.image_uris import retrieve
 ModuleNotFoundError: No module named 'sagemaker.image_uris' """
 # we have chnaged the to '1.4-2-py312' and from sagemaker.core import image_uris  the issue is resolved 
+
+

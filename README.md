@@ -217,3 +217,37 @@ To check the Sagemaker version
 ###  python -c "import importlib.metadata; print(importlib.metadata.version('sagemaker'))"
 sagamker version --> 3.21.0  and scikit-learn - 19.0 and joblib - 1.5.3 sagemaker sklearn container 1.4-2
 
+Model has been registered so we can retirve through command line as of now so visualise and from console or UI representation we need to setup the infra for sagemaker studio by creating domain and user by applying the iam policies and roles 
+
+ "ModelPackageGroupName": "mlops-full-project-models",
+            "ModelPackageGroupArn": "arn:aws:sagemaker:ap-southeast-2:129898827031:model-package-group/mlops-full-project-models",
+            "ModelPackageGroupDescription": "Model Registry for Machine Failure Prediction models",
+            "CreationTime": "2026-08-29T19:03:27.738000+00:00",
+            "ModelPackageGroupStatus": "Completed"
+
+=================================================================================================
+CI/CD pipeline :
+=================================================================================================
+it containes -- >github -->jenkins-->
+                              ||
+                               -----> 1. checkout the code 
+                               ------> 2. install dependencies
+                               -------> 3. runtests
+                               -------> 4. data validation /preprocessing 
+                               -----> 5. Train model
+                               -----> 6.evaluate model
+                              ------> 7.log experiment --> Mlflow
+                              ------->8. package the model
+                               ------>9.push artifacts--> s3
+                               -----> 10.register model --> sagemaker model registry
+                              -------> 11. Quality gate
+                                             ||
+                                              ----> FAIL --> STOP
+                                              ----> Pass --> continue
+                              ------->12. deploy --> sagemaker endpoint
+                              ------> 13. cloudwatch monitoring
+                               -----> SNS ---> email alerts
+-----------------------------------
+JENKINS -->  jenkins controller --> jenkins agents/workers --> ephemeral build agents 
+----------------------------------
+
