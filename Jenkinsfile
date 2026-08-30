@@ -35,7 +35,15 @@ pipeline {
                 '''
             }
         }
-
+        stage('preprocess') {
+            steps {
+                echo "preprocessing dataset and code..."
+                sh '''
+                    . ${PYTHON_ENV}/bin/activate
+                    python src/data_preprocessing.py
+                '''
+            }
+        }
         stage('Train') {
             steps {
                 echo "Training Model..."
