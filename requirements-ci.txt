@@ -3,3 +3,4 @@ joblib==1.5.3
 scikit-learn==1.9.0
 mlflow==3.15.2
 sagemaker-mlflow==0.5.0
+awscli

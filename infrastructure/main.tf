@@ -14,6 +14,9 @@ version = "~> 5.0"
 provider "aws" {
 region = "ap-southeast-2" # Sydney
 }
+provider "awscc" {
+  region = "ap-southeast-2" # Sydney
+}
 
 resource "aws_s3_bucket" "mlops_data" {
 bucket = "mlops-full-project-sagemaker-data-2026"
