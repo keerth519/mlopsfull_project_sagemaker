@@ -11,12 +11,13 @@ print(df.columns.tolist())
 print(df.isnull().sum())
 
 '''data validation'''
+
 #checking the number of  C and R in dataset 
 print("Rows:", df.shape[0])
 print("columns:", df.shape[1])
 
 """ 
-python src/data_Inspection.py
+python src/data_validation.py
 
 ###  output  ####
 HDF                        0

@@ -96,6 +96,10 @@ Arttifacrs : Model. Plots , files Etc,
 
 We use mlflow tracking for Experiment tracking - logging training parameters , evaluation metrics and model artifacts so that  different training runs can be compared and Reproduced 
 
+
+
+    #### we can't we maintain metrics for training data 
+
 ==============================================================
 DATA EVALUATION(data_evaluation.py)
 ==============================================================
@@ -124,6 +128,11 @@ sagemaker model Registry
 ==============================================================
 architecture 
 model.pkl-artifacts --> s3  --> sagemaker model package group --> model version 1
+
+### suggestion is inference.yaml file --> s3  and  
+#### docker file  ---> ecr --> sagemaker studio those file for the endpoint 
+### FAST API Training face itself
+
 ============
 
 -->  need to store the artifacts to s3 
@@ -294,3 +303,6 @@ I am building the jenkins through Docker container without ec2 instances
 ------------------------
 URL for payload - https://verbose-giggle-x5wjwq6rg9p4fp4j-8080.app.github.dev/github-webhook/ -- jenkins url - https://verbose-giggle-x5wjwq6rg9p4fp4j-8080.app.github.dev/job/mlops-full-project/
 we are removing the from job to end and adding the github-webhook in that place 
+
+one dimensional array - [1,2,2]   2-  [[0],
+                                        [1]]

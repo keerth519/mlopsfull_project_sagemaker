@@ -12,7 +12,7 @@ product id in ML those are not direct usefull features """
 df = df.drop(columns=["UDI", "Product ID"])
 print("after removing unnecessary columns:")
 print(df.shape)
-###converting categorical(L,M,H) data to numerical data(0,1,2) 
+###converting categorical(L,M,H) data to numerical data(0,1,2)  #  ml algorithms 
 df = pd.get_dummies(df, columns=["Type"], dtype=int)
 print("after encoding Type")
 print(df.head)
