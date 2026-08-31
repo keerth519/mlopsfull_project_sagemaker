@@ -307,6 +307,59 @@ I am building the jenkins through Docker container without ec2 instances
 ------------------------
 URL for payload - https://verbose-giggle-x5wjwq6rg9p4fp4j-8080.app.github.dev/github-webhook/ -- jenkins url - https://verbose-giggle-x5wjwq6rg9p4fp4j-8080.app.github.dev/job/mlops-full-project/
 we are removing the from job to end and adding the github-webhook in that place 
+---------------------
+aws sts get-caller-identity
+ ps  aux | grep jenkins
+history | grep -i jenkins | tail -20
+docker ps -a 
+docker start  jenkins
+ grep -r "awscc" infrastructure
+ docker exec jenkins terraform version
+ docker exec jenkins aws --version
+ docker exec -u root jenkins bash -c "apt-get update && apt-get install -y awscli"
+ --------------------
+ successfully registered the model in sagemkaer registery as package model(AWScc) 
+ =====================================
+ QUALITy GATES (data_evaluation.py)
+ =====================================
+    is model performance meets our minimum acceptable cireria ? --> cd continue . if no --> deployment STOP.
+    metrics will be logged to the mloflow and jenkins direct will tell pass or fail
+    step 1 --> decide quality thresholds
+            accuracy >=0.00 , precision >=0.00 , recall >=0.00 , f1 >=0.00
+    step2 --> modify evalauation / quantity-gate logic 
+    step3 --> jenkins reads the result 
+    step 4 -->PASS --> deployment 
+    STEP5 --> FAIL --> exits 1 and jenkins stops
 
-one dimensional array - [1,2,2]   2-  [[0],
-                                        [1]]
+Sage maker need i am execution role 
+in our project --> iam user --> access keys     --> jenkins/terraform -->aws
+    sage maker execution role                   ---> sagemaker --> s3/ecr/cloudwatch
+  --> created the iam role thorugh Infra
+  next : sagemaker model  creation
+  next : endpoint configuration
+  next : sage maker endpoint
+                  S3
+                 │
+          model.tar.gz
+                 │
+                 ▼
+         SageMaker Model
+                 │
+                 ▼
+      Endpoint Configuration
+         │             │
+      Model       ml.t2.medium
+         │             │
+         └──────┬──────┘
+                ▼
+      SageMaker Endpoint
+                │
+                ▼
+         Live inference
+  error while creating sagemaker endpoint 
+     Error: waiting for SageMaker AI Endpoint (mlops-failure-prediction-endpoint) create: unexpected state 'Failed', wanted target 'InService'. last error: The primary container for production variant primary did not pass the ping health check. Please check CloudWatch logs for this endpoint.
+│  for that we have chekced cloudwatch logs from we that have decided to write the inference.py
+  ======================================================
+  inference code tells the container how to load the model and process request . 
+  -----------------------------------------------------------
+  python -c "import joblib; m=joblib.load('models/model.pkl'); print(type(m))" python -c "import joblib;

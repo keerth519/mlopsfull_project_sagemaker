@@ -43,4 +43,21 @@ with mlflow.start_run():
     mlflow.log_metric("recall", recall)
     mlflow.log_metric("f1score", f1)
     print("evaluation metrics logged to mlflow ")
-
+## QUALITY GATE
+ACCURACY_THRESHOLD = 0.8
+PRECISION_THRESHOLD = 0.8
+RECALL_THRESHOLD = 0.8
+F1_THRESHOLD = 0.8
+if (
+    accuracy >= ACCURACY_THRESHOLD 
+    and Precision >= PRECISION_THRESHOLD 
+    and recall >= RECALL_THRESHOLD
+    and f1 >= F1_THRESHOLD
+):
+    print("Quality Gate Passed")
+else:
+    print("Quality Gate Failed")
+    raise SystemExit(1) # jenkins sees that as a failure and stops the pipeline deployment.
+""" suppose evaluation metrics gives >=0.8 
+Quality Gate Passed  python exits successfully --> 
+jenkins can continue even one metrics will  the quality gate will be failed"""
