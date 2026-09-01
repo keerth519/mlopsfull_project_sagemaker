@@ -108,6 +108,7 @@ pipeline {
                     terraform import aws_s3_bucket.mlops_data mlops-full-project-sagemaker-data-2026 || true
                     terraform import aws_sagemaker_model_package_group.mlops_model_group arn:aws:sagemaker:ap-southeast-2:129898827031:model-package-group/mlops-full-project-models || true
                     terraform import aws_iam_role.sagemaker_execution_role mlops-sagemaker-execution-role || true
+                    terraform import aws_sagemaker_model.mlops_model mlops-failure-prediction-model || true
                     terraform plan
                     terraform apply -auto-approve
                 '''
