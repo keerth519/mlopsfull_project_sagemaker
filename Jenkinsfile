@@ -110,6 +110,7 @@ pipeline {
                     terraform import aws_iam_role.sagemaker_execution_role mlops-sagemaker-execution-role || true
                     terraform import aws_sagemaker_model.mlops_model mlops-failure-prediction-model || true
                     terraform import aws_sagemaker_endpoint_configuration.mlops_endpoint_config mlops-failure-prediction-endpoint-config || true
+                    terraform import aws_sagemaker_endpoint.mlops_endpoint mlops-failure-prediction-endpoint || true
                     terraform plan
                     terraform apply -auto-approve
                 '''
