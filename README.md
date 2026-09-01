@@ -379,3 +379,9 @@ aws sagemaker-runtime invoke-endpoint --endpoint-name mlops-failure-prediction-e
        aws logs get-log-events --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint" --log-stream-name "primary/i-0299588a1433c8aa4" --region ap-southeast-2 --limit 50
     aws sagemaker describe-endpoint --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --query '{Status:EndpointStatus,Config:EndpointConfigName}'
 
+The sage maker endpoint configuration and sagemaker endpoint with inference Request and Resposne has been configured through terraform 
+Predictions has been provided and got the Repdections as well 
+---------------------------------
+building the pipeline from Quality gate to sagemaker endpoint to get the predection from new data 
+
+----------------
