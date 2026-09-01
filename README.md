@@ -364,5 +364,18 @@ in our project --> iam user --> access keys     --> jenkins/terraform -->aws
   -----------------------------------------------------------
   python -c "import joblib; m=joblib.load('models/model.pkl'); print(type(m))" python -c "import joblib;
 
-     aws sagemaker describe-endpoint  --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2
+     aws sagemaker describe-endpoint  --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --query 'endpointStatus'
+     
+      aws sagemaker describe-endpoint  --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --query 'EndpointStatus'
+      aws sagemaker describe-endpoint  --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --query 'EndpointStatus' --output text
+  INFERENCE prediction command throufh cli
+
+     aws sagemaker-runtime invoke-endpoint --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --content-type text/csv --body fileb://test_request.csv /tmp/predictions.txt
+INFERENCE REsPONSe 
+aws sagemaker-runtime invoke-endpoint --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --content-type text/csv --accept text/csv --body fileb://../test.csv ./response.json
+
+     to show the log stream 
+       aws logs describe-log-streams --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint" --region ap-southeast-2 --order-by LastEventTime --descending --max-items 1
+       aws logs get-log-events --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint" --log-stream-name "primary/i-0299588a1433c8aa4" --region ap-southeast-2 --limit 50
+    aws sagemaker describe-endpoint --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --query '{Status:EndpointStatus,Config:EndpointConfigName}'
 

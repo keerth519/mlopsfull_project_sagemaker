@@ -55,15 +55,34 @@ pipeline {
             }
         }
 
-        stage('Evaluate') {
-            steps {
-                echo "Evaluating Model..."
-                sh '''
-                    . ${PYTHON_ENV}/bin/activate
-                    python src/data_evaluation.py
-                '''
-            }
+        stage('Evaluate') { steps { echo "Evaluating Model..."
+
+            script {
+                 env.EVAL_STATUS = sh(
+                script: '''
+                . ${PYTHON_ENV}/bin/activate
+                python src/data_evaluation.py
+            ''',
+            returnStatus: true
+        ).toString()
+    }
+}
+}
+
+        stage('Quality Gate') { steps { script { echo "Checking model quality..."
+
+             if (env.EVAL_STATUS == '0') {
+                echo "Quality Gate PASSED"
+                echo "All model metrics meet the required thresholds."
+             } 
+            else {
+                echo "Quality Gate FAILED"
+                echo "Model does not meet the required thresholds."
+                error("Pipeline stopped because Quality Gate failed.")
         }
+    }
+}
+}
         stage('Register Model') {
             steps {
                 echo "Registering model in sagemaker model registry..."
