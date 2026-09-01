@@ -363,3 +363,6 @@ in our project --> iam user --> access keys     --> jenkins/terraform -->aws
   inference code tells the container how to load the model and process request . 
   -----------------------------------------------------------
   python -c "import joblib; m=joblib.load('models/model.pkl'); print(type(m))" python -c "import joblib;
+
+     aws sagemaker describe-endpoint  --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2
+

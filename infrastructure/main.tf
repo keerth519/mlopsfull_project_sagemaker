@@ -45,9 +45,10 @@ resource "aws_s3_object" "model" {
   bucket = aws_s3_bucket.mlops_data.id
   key    = "model.tar.gz"
   source = "../models/model.tar.gz"
+  etag = filemd5("../models/model.tar.gz)
 }
-#sagemaker model registry
-#this creates a model package Group where different versions of out trained ml model can be registered  and managed
+  #sagemaker model registry
+  #this creates a model package Group where different versions of out trained ml model can be registered  and managed
 resource "aws_sagemaker_model_package_group" "mlops_model_group" {
   model_package_group_name        = "mlops-full-project-models"
   model_package_group_description = "Model Registry for Machine Failure Prediction models"
@@ -58,15 +59,15 @@ resource "aws_sagemaker_model_package_group" "mlops_model_group" {
     managed     = "Terraform"
   }
 }
-# Regestring the model version in Sagemaker Ai
+   # Regestring the model version in Sagemaker Ai
 resource "awscc_sagemaker_model_package" "mlops_model" {
   model_package_group_name  = aws_sagemaker_model_package_group.mlops_model_group.model_package_group_name
   model_package_description = "Machine Failure Prediction Model Version 1"
   depends_on                = [aws_s3_object.model]
   inference_specification = {
-    containers = [
+    containers =[
       {
-        image          = "783357654285.dkr.ecr.ap-southeast-2.amazonaws.com/sagemaker-scikit-learn:1.4-2-cpu-py3"
+        image          =  "783357654285.dkr.ecr.ap-southeast-2.amazonaws.com/sagemaker-scikit-learn:1.4-2-cpu-py3"
         model_data_url = "s3://mlops-full-project-sagemaker-data-2026/model.tar.gz"
       }
     ]
@@ -79,7 +80,7 @@ resource "aws_iam_role_policy_attachment" "sagemaker_execution_policy" {
   role       = aws_iam_role.sagemaker_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSageMakerFullAccess"
 }
-#Sagemaker model 
+   #Sagemaker model 
 resource "aws_sagemaker_model" "mlops_model" {
   name               = "mlops-failure-prediction-model"
   execution_role_arn = aws_iam_role.sagemaker_execution_role.arn
@@ -88,11 +89,11 @@ resource "aws_sagemaker_model" "mlops_model" {
     model_data_url = "s3://mlops-full-project-sagemaker-data-2026/model.tar.gz"
     environment = {
       SAGEMAKER_PROGRAM = "inference.py"
-      SAGEMAKER_SUBMIT_DIRECTORY = "/opt/ml/model/code"
+      SAGEMAKER_SUBMIT_DIRECTORY = "s3://mlops-full-project-sagemaker-data-2026/model.tar.gz"
     }
   }
 }
-#Awssagemakerendpoint configuration
+   #Awssagemakerendpoint configuration
 resource "aws_sagemaker_endpoint_configuration" "mlops_endpoint_config" {
   name = "mlops-failure-prediction-endpoint-config"
   production_variants {
@@ -102,7 +103,7 @@ resource "aws_sagemaker_endpoint_configuration" "mlops_endpoint_config" {
     instance_type          = "ml.t2.medium"
   }
 }
-#Sagemaker endpoint
+  #Sagemaker endpoint
 resource "aws_sagemaker_endpoint" "mlops_endpoint" {
   name                 = "mlops-failure-prediction-endpoint"
   endpoint_config_name = aws_sagemaker_endpoint_configuration.mlops_endpoint_config.name
