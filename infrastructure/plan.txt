@@ -1,0 +1,134 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+  ~ update in-place
+
+Terraform will perform the following actions:
+
+  # aws_cloudwatch_log_metric_filter.sagemaker_errors will be created
+  + resource "aws_cloudwatch_log_metric_filter" "sagemaker_errors" {
+      + id             = (known after apply)
+      + log_group_name = "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint"
+      + name           = "mlops-sagemaker-errors"
+      + pattern        = "ERROR"
+
+      + metric_transformation {
+          + name      = "InferenceErrors"
+          + namespace = "MLOps/SageMaker"
+          + unit      = "None"
+          + value     = "1"
+        }
+    }
+
+  # aws_cloudwatch_metric_alarm.sagemaker_5xx_alarm will be created
+  + resource "aws_cloudwatch_metric_alarm" "sagemaker_5xx_alarm" {
+      + actions_enabled                       = true
+      + alarm_actions                         = (known after apply)
+      + alarm_description                     = "Alert when SageMaker endpoint returns 5XX errors"
+      + alarm_name                            = "mlops-sagemaker-5xx-errors"
+      + arn                                   = (known after apply)
+      + comparison_operator                   = "GreaterThanOrEqualToThreshold"
+      + dimensions                            = {
+          + "EndpointName" = "mlops-failure-prediction-endpoint"
+          + "VariantName"  = "primary"
+        }
+      + evaluate_low_sample_count_percentiles = (known after apply)
+      + evaluation_periods                    = 1
+      + id                                    = (known after apply)
+      + metric_name                           = "Invocation5XXErrors"
+      + namespace                             = "AWS/SageMaker"
+      + period                                = 60
+      + statistic                             = "Sum"
+      + tags_all                              = (known after apply)
+      + threshold                             = 1
+      + treat_missing_data                    = "missing"
+    }
+
+  # aws_cloudwatch_metric_alarm.sagemaker_error_alarm will be created
+  + resource "aws_cloudwatch_metric_alarm" "sagemaker_error_alarm" {
+      + actions_enabled                       = true
+      + alarm_actions                         = (known after apply)
+      + alarm_description                     = "Alert when SageMaker inference errors occur"
+      + alarm_name                            = "mlops-sagemaker-inference-errors"
+      + arn                                   = (known after apply)
+      + comparison_operator                   = "GreaterThanOrEqualToThreshold"
+      + evaluate_low_sample_count_percentiles = (known after apply)
+      + evaluation_periods                    = 1
+      + id                                    = (known after apply)
+      + metric_name                           = "InferenceErrors"
+      + namespace                             = "MLOps/SageMaker"
+      + period                                = 60
+      + statistic                             = "Sum"
+      + tags_all                              = (known after apply)
+      + threshold                             = 1
+      + treat_missing_data                    = "missing"
+    }
+
+  # aws_cloudwatch_metric_alarm.sagemaker_latency_alarm will be created
+  + resource "aws_cloudwatch_metric_alarm" "sagemaker_latency_alarm" {
+      + actions_enabled                       = true
+      + alarm_actions                         = (known after apply)
+      + alarm_description                     = "Alert when SageMaker model latency exceeds 2 seconds"
+      + alarm_name                            = "mlops-sagemaker-high-latency"
+      + arn                                   = (known after apply)
+      + comparison_operator                   = "GreaterThanOrEqualToThreshold"
+      + dimensions                            = {
+          + "EndpointName" = "mlops-failure-prediction-endpoint"
+          + "VariantName"  = "primary"
+        }
+      + evaluate_low_sample_count_percentiles = (known after apply)
+      + evaluation_periods                    = 1
+      + id                                    = (known after apply)
+      + metric_name                           = "ModelLatency"
+      + namespace                             = "AWS/SageMaker"
+      + period                                = 60
+      + statistic                             = "Average"
+      + tags_all                              = (known after apply)
+      + threshold                             = 2000000
+      + treat_missing_data                    = "missing"
+    }
+
+  # aws_s3_object.model will be updated in-place
+  ~ resource "aws_s3_object" "model" {
+      ~ etag                          = "ba6b2eb387056ed454bb4a7d64d26694" -> "f240bacbb86e383894402b79acb82756"
+        id                            = "model.tar.gz"
+        tags                          = {}
+      + version_id                    = (known after apply)
+        # (24 unchanged attributes hidden)
+    }
+
+  # aws_sns_topic.mlops_alerts will be created
+  + resource "aws_sns_topic" "mlops_alerts" {
+      + arn                         = (known after apply)
+      + beginning_archive_time      = (known after apply)
+      + content_based_deduplication = false
+      + fifo_throughput_scope       = (known after apply)
+      + fifo_topic                  = false
+      + id                          = (known after apply)
+      + name                        = "mlops-sagemaker-alerts"
+      + name_prefix                 = (known after apply)
+      + owner                       = (known after apply)
+      + policy                      = (known after apply)
+      + signature_version           = (known after apply)
+      + tags_all                    = (known after apply)
+      + tracing_config              = (known after apply)
+    }
+
+  # aws_sns_topic_subscription.email will be created
+  + resource "aws_sns_topic_subscription" "email" {
+      + arn                             = (known after apply)
+      + confirmation_timeout_in_minutes = 1
+      + confirmation_was_authenticated  = (known after apply)
+      + endpoint                        = "pj807404@gmai.com"
+      + endpoint_auto_confirms          = false
+      + filter_policy_scope             = (known after apply)
+      + id                              = (known after apply)
+      + owner_id                        = (known after apply)
+      + pending_confirmation            = (known after apply)
+      + protocol                        = "email"
+      + raw_message_delivery            = false
+      + topic_arn                       = (known after apply)
+    }
+
+Plan: 6 to add, 1 to change, 0 to destroy.

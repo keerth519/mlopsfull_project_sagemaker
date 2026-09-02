@@ -119,6 +119,85 @@ pipeline {
             }
          }
      }
+        stage('Endpoint Test') {
+             steps { 
+                echo "Testing SageMaker endpoint..."
+
+                script {
+                withCredentials([
+                    usernamePassword(
+                         credentialsId: 'aws-credentials',
+                         usernameVariable: 'AWS_ACCESS_KEY_ID',
+                         passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                      )
+                   ]) {
+                    sh '''
+                        echo "Creating test data..."
+                        echo "5.1,3.5,1.4,0.2" > test.csv
+                    '''
+                    sh '''
+                        set -e
+
+                        export AWS_DEFAULT_REGION=ap-southeast-2
+
+                        ENDPOINT_NAME="mlops-failure-prediction-endpoint"
+
+                        echo "Checking SageMaker endpoint status..."
+
+                        for i in $(seq 1 20); do
+
+                            STATUS=$(aws sagemaker describe-endpoint \
+                                --endpoint-name "$ENDPOINT_NAME" \
+                                --region "$AWS_DEFAULT_REGION" \
+                                --query 'EndpointStatus' \
+                                --output text)
+
+                            echo "Endpoint status: $STATUS"
+
+                           if [ "$STATUS" = "InService" ]; then
+                              break
+                           fi
+
+                           if [ "$STATUS" = "Failed" ]; then
+                              echo "ERROR: SageMaker endpoint deployment failed."
+                              exit 1
+                           fi
+
+                            echo "Waiting for endpoint..."
+                            sleep 30
+
+                        done
+
+                        if [ "$STATUS" != "InService" ]; then
+                            echo "ERROR: Endpoint did not become InService."
+                            exit 1
+                       fi
+
+                       echo "Endpoint is InService."
+                       echo "Invoking endpoint with test data..."
+
+                       aws sagemaker-runtime invoke-endpoint \
+                            --endpoint-name "$ENDPOINT_NAME" \
+                            --region "$AWS_DEFAULT_REGION" \
+                            --content-type text/csv \
+                            --accept text/csv \
+                            --body fileb://test.csv \
+                            prediction.txt
+
+                        echo "Prediction received:"
+                        cat prediction.txt
+
+                        if [ ! -s prediction.txt ]; then
+                            echo "ERROR: Prediction file is empty."
+                            exit 1
+                        fi
+
+                        echo "Endpoint integration test PASSED."
+                   '''
+        }
+    }
+}
+}
   }
 }
 

@@ -413,3 +413,36 @@ aws logs filter-log-events --log-group-name "/aws/sagemaker/Endpoints/mlops-fail
 aws logs filter-log-events --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint"  --filter-pattern "ERROR" --region ap-southeast-2
 
 aws logs filter-log-events --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint" --filter-pattern "Traceback" --region ap-southeast-2
+---------------------------
+cloudwatch alerts
+--------------------
+  "we configured cloudwatch logs with a metrics filter to detect events from the sagemaker endpoint . the filter publishes an inference error custome metrics . a cloudwatch alaram monitors that metric , and when the error count reaches the threshold ,  it send an alert through SNS to the subscribed email."
+  "monitor.tf file has been created , variable.tf file as well , tfvars and this tfvars mentione .gitignore bcs it have the mail hardcoded value "
+     monitoring mertics includes that 
+          helath / error check                    model perfommance
+               ||                                      ||
+               cloud watch metrics                 model/data monitoring
+               ||                                       ||
+                --> 5XX errors and Latency          data drift and model drift 
+                          ||                           ||
+                          -------------------------------
+                                     ||
+                                  cloudwatch 
+                                     ||
+                                     SNS 
+                                     ||
+                                     EMail / Teams  
+  Endpoint health == 5 XX errors    SNS
+  Endpoint performance = Latency    SNS
+  MODEL Quality = Accuracy /precision / recall / f1  --> jenkins Quality gate
+  data/modle Drift    =   Later Enhancemnet  == cloud wath sage maker monitoring
+    ### to save the terraform plan terraform plan -out=plan.tfplan###
+    LIst of suscripription
+    
+  aws sns list-subscriptions-by-topic --topic-arn arn:aws:sns:ap-southeast-2:129898827031:mlops-sagemaker-alerts --region ap-southeast-2
+
+ jenkins is responsible for cicd - building , testing , registering and deploying a the model . once deployed , amazon cloudwatch continuously monitors endpoint health and performance . cloudwatch alarms publish notification through sns when predifined threshold are breached .
+
+ Manually test SNS
+
+ aws sns publish --topic-arn arn:aws:sns:ap-southeast-2:129898827031:mlops-sagemaker-alerts --subject "MLOps SNS Test Alert" --message "This is a test notification for the SageMaker MLOps monitoring pipeline." --region ap-southeast-2

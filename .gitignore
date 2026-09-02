@@ -3,6 +3,7 @@
 *.tfstate
 *.tfstate.*
 *.zip
+terraform.tfvars
 
 #aws cli installation
 infrastructure/aws/
