@@ -368,15 +368,28 @@ in our project --> iam user --> access keys     --> jenkins/terraform -->aws
      
       aws sagemaker describe-endpoint  --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --query 'EndpointStatus'
       aws sagemaker describe-endpoint  --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --query 'EndpointStatus' --output text
+ -------------------------------------------------- 
   INFERENCE prediction command throufh cli
 
      aws sagemaker-runtime invoke-endpoint --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --content-type text/csv --body fileb://test_request.csv /tmp/predictions.txt
+
+     aws sagemaker-runtime invoke-endpoint --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --content-type text/csv --accept text/csv --body fileb://test.csv ./predection.txt
+   -->  la -l test.csv
+     
+
 INFERENCE REsPONSe 
 aws sagemaker-runtime invoke-endpoint --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --content-type text/csv --accept text/csv --body fileb://../test.csv ./response.json
 
-     to show the log stream 
+
+--------------------------------------------
+----------------------------------------
+     to show the log stream  from cloudwatch 
        aws logs describe-log-streams --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint" --region ap-southeast-2 --order-by LastEventTime --descending --max-items 1
-       aws logs get-log-events --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint" --log-stream-name "primary/i-0299588a1433c8aa4" --region ap-southeast-2 --limit 50
+
+       aws logs get-log-events --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint" --log-stream-name "primary/i-0299588a1433c8aa4" --region ap-southeast-2 --limit 100
+
+       aws logs filter-log-events --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint" --filter-pattern '"POST /invocation"' --region ap-southeast-2 
+  ------------------------------------------------
     aws sagemaker describe-endpoint --endpoint-name mlops-failure-prediction-endpoint --region ap-southeast-2 --query '{Status:EndpointStatus,Config:EndpointConfigName}'
 
 The sage maker endpoint configuration and sagemaker endpoint with inference Request and Resposne has been configured through terraform 
@@ -385,3 +398,18 @@ Predictions has been provided and got the Repdections as well
 building the pipeline from Quality gate to sagemaker endpoint to get the predection from new data 
 
 ----------------
+cicd is done need to configure the sns 
+------------
+Cicd  ->  code/model -->jenkins --> validate --> Register --> Deploy model--> sagemaker endpoint
+
+Runtime --> New Data --> backend APi --> sagemaker endpoint --> predictions --> backend --> user
+
+--------------------
+
+AWS cloud watch error filter 
+
+aws logs filter-log-events --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint" --filter-pattern '"POST /invocations"' --region ap-southeast-2
+
+aws logs filter-log-events --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint"  --filter-pattern "ERROR" --region ap-southeast-2
+
+aws logs filter-log-events --log-group-name "/aws/sagemaker/Endpoints/mlops-failure-prediction-endpoint" --filter-pattern "Traceback" --region ap-southeast-2
