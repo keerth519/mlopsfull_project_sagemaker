@@ -125,7 +125,18 @@ work flow
     -->model evaluation 
          || --> MLflow
                    ||
-                     ---> Accuracy , precision , recall , f1
+                     ---> Accuracy , precision , recall , f1 
+
+    ## this train random forest using these settings 
+          n_estimators =100
+         Max_depth = 5
+          min_sample_split: 2
+      but Tuning would means trying multiple combinations: 
+         n_estimators =100 , 200 , 300
+         Max_depth = 5,10,20
+         min_sample_split: 2,5   Then comparing the Resulting validation metrics and selecting the best combinations 
+      
+  
 we use primarily for experiment tracking --Logging parameters and evaluation metrics. model registration is handled by sagemaker 
 ==============================================================
 sagemaker model Registry
@@ -268,7 +279,7 @@ we use jenkins to orchestrate the ml pipeline .it check out the code from git , 
 
 I am building the jenkins through Docker container without ec2 instances
      --> docket -- version (to check the docker is present are not in current environment )
-     pulling the Jenkins image 
+     pulling the Jenkins image ##### 
       ---> docker pull jenkins/jenkins:lts-jdk21
     Starts the jenkins container 
       ---->    docker run -d \
