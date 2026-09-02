@@ -97,9 +97,14 @@ pipeline {
                         credentialsId: 'aws-credentials',
                         usernameVariable: 'AWS_ACCESS_KEY_ID',
                         passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                    )
+                    ),
+                    string( 
+                        credentialsId: 'alert-email',
+                        variable: 'ALERT_EMAIL'
+                    ) 
                 ]){
                    sh '''
+                    export TF_VAR_alert_email="$ALERT_EMAIL"
                     echo "uploading files to s3"
                     aws s3 cp models/model.tar.gz s3://mlops-full-project-sagemaker-data-2026/model.tar.gz
                     echo " registering model in sagemaker modle registry .."
@@ -131,10 +136,7 @@ pipeline {
                          passwordVariable: 'AWS_SECRET_ACCESS_KEY'
                       )
                    ]) {
-                    sh '''
-                        echo "Creating test data..."
-                        echo "5.1,3.5,1.4,0.2" > test.csv
-                    '''
+                    
                     sh '''
                         set -e
 
